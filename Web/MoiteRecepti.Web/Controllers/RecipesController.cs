@@ -1,8 +1,11 @@
 ﻿namespace MoiteRecepti.Web.Controllers
 {
+    using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
+
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using MoiteRecepti.Services.Data;
     using MoiteRecepti.Web.ViewModels.Recipe;
@@ -11,13 +14,16 @@
     {
         private readonly ICategoriesService categoriesService;
         private readonly IRecipesService recipesService;
+        private readonly IWebHostEnvironment environment;
 
         public RecipesController(
             ICategoriesService categoriesService,
-            IRecipesService recipesService)
+            IRecipesService recipesService,
+            IWebHostEnvironment environment)
         {
             this.categoriesService = categoriesService;
             this.recipesService = recipesService;
+            this.environment = environment;
         }
 
         [Authorize]
@@ -39,7 +45,17 @@
             }
 
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            await this.recipesService.CreateAsync(input, userId);
+
+            try
+            {
+                await this.recipesService.CreateAsync(input, userId, $"{this.environment.WebRootPath}/images");
+            }
+            catch (Exception ex)
+            {
+                this.ModelState.AddModelError(string.Empty, ex.Message);
+                input.CategoriesItems = this.categoriesService.GetAllAsKetValuePairs();
+                return this.View(input);
+            }
 
             return this.Redirect("/");
         }
