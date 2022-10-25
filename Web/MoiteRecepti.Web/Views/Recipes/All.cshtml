@@ -1,0 +1,23 @@
+﻿@model RecipesListViewModel
+@{
+    this.ViewData["Title"] = "All Recipes, page " + Model.PageNumber;
+}
+
+<h1>@this.ViewData["Title"]</h1>
+
+<hr />
+
+<div class="row">
+    @foreach (var recipe in this.Model.Recipes)
+    {
+        <div class="media col-md-3">
+            <div class="media-body">
+                <h5 class="mt-0">@recipe.Name</h5>
+                @recipe.CategoryName
+                <img class="mr-3 img-responsive" width="300" src="@recipe.ImageUrl">
+            </div>
+        </div>
+    }
+</div>
+<hr />
+<partial name="_PagingPartial" model="@Model" />
