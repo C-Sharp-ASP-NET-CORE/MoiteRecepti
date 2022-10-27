@@ -73,5 +73,11 @@
 
             return this.View(viewModel);
         }
+
+        public IActionResult ById(int id)
+        {
+            var recipe = this.recipesService.GetById<SingleRecipeViewModel>(id);
+            return this.View(recipe);
+        }
     }
 }

@@ -12,7 +12,7 @@
     {
         <div class="media col-md-3">
             <div class="media-body">
-                <h5 class="mt-0">@recipe.Name</h5>
+                <h5 class="mt-0"><a asp-action="ById" asp-route-id="@recipe.Id">@recipe.Name</a></h5>
                 @recipe.CategoryName
                 <img class="mr-3 img-responsive" width="300" src="@recipe.ImageUrl">
             </div>
